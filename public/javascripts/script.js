@@ -1,3 +1,5 @@
+/* Donald Trump SA - Client-Side JavaScript */
+
 var sentiment_score = $("#sentiment_score")[0].innerHTML;
 var info_div = document.getElementById("info");
 
@@ -14,5 +16,3 @@ if(sentiment_score > 0) {
 function numberOfTweets() {
 	alert("YOLO")
 }
-
-setInterval(location.reload(), 1000)

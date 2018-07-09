@@ -1,21 +1,13 @@
+/* Donald Trump SA Server File. */
+
 var express = require("express")
+var app = express()
+
 var path = require("path")
 var Sentiment = require("sentiment")
 var sentiment = new Sentiment()
 
 var Twitter = require("twitter")
-
-var indexRouter = require("./routes/index")
-
-var app = express()
-
-var total_sentiments = 0
-var sentiment_totals = 0
-
-var tweets_arr = []
-var sentiments_total = []
-var sentiments_arr = []
-
 var client = new Twitter({
 	consumer_key: "5E6Ccz6Dva64Fy5zdWxJ9Z5Yj",
 	consumer_secret: "vxHW4Qxzs9BIMb0BLHlZPt75wzEj0cIZ5kam4Qq5oQDCAUixXO",
@@ -23,12 +15,16 @@ var client = new Twitter({
 	access_token_secret: "cZpcdJCH9RNbgBRw2AKFweImhs6U2jGwT3GQf7AgxBOMf"
 })
 
+var total_sentiments = 0
+var sentiment_totals = 0
+
+var sentiments_arr = []
+
 client.stream("statuses/filter", {track: "donald trump"}, function(stream) {
 	stream.on("data", function(tweet) {
 		var tweet_data = tweet.text
 		var tweet_sentiment = sentiment.analyze(tweet_data).score
 
-		tweets_arr.push(tweet_data)
 		sentiments_arr.push(tweet_sentiment)
 
 		total_sentiments += 1
@@ -36,7 +32,7 @@ client.stream("statuses/filter", {track: "donald trump"}, function(stream) {
 	})
 
 	stream.on("error", function(err) {
-		console.log("AN ERROR HAS OCCURED: " + err)
+		throw err;
 	})
 })
 
@@ -52,26 +48,24 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(express.static(path.join(__dirname, "public")))
 
-// app.use("/", indexRouter)
-
 app.get("/", function(req, res) {
 	res.render("index", {value: requestSentimentAverage(), number_of_tweets: sentiments_arr.length})
 })
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  next(createError(404))
+	next(createError(404))
 })
 
 // error handler
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message
-  res.locals.error = req.app.get("env") === "development" ? err : {}
+	// set locals, only providing error in development
+	res.locals.message = err.message
+	res.locals.error = req.app.get("env") === "development" ? err : {}
 
-  // render the error page
-  res.status(err.status || 500)
-  res.render("error")
+	// render the error page
+	res.status(err.status || 500)
+	res.render("error")
 })
 
 app.listen(8080)
