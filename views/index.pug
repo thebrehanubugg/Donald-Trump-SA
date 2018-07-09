@@ -1,9 +1,11 @@
 extends layout
 
 block content
-  h1 Donald J. Trump Sentiment Analysis Average
-  p= value
-  br
-  p= number_of_tweets
-  br
-  p= arr_of_sentiments
+	div#info
+		img(src="#")
+		p#sentiment_score= value
+		br
+		button #{number_of_tweets} Tweets Recorded
+		// br
+		// br
+		// button Ayo! Generate Graph

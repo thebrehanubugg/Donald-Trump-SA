@@ -1,6 +1,5 @@
 var express = require("express")
 var path = require("path")
-var logger = require("morgan")
 var Sentiment = require("sentiment")
 var sentiment = new Sentiment()
 
@@ -29,8 +28,6 @@ client.stream("statuses/filter", {track: "donald trump"}, function(stream) {
 		var tweet_data = tweet.text
 		var tweet_sentiment = sentiment.analyze(tweet_data).score
 
-		console.log(tweet_data)
-
 		tweets_arr.push(tweet_data)
 		sentiments_arr.push(tweet_sentiment)
 
@@ -51,7 +48,6 @@ function requestSentimentAverage() {
 app.set("views", path.join(__dirname, "views"))
 app.set("view engine", "pug")
 
-app.use(logger("dev"))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(express.static(path.join(__dirname, "public")))
@@ -59,8 +55,7 @@ app.use(express.static(path.join(__dirname, "public")))
 // app.use("/", indexRouter)
 
 app.get("/", function(req, res) {
-	// res.render("index", {value: requestSentimentAverage(), arr_of_tweets: tweets_arr, arr_of_sentiments: sentiments_arr})
-	res.render("index", {value: requestSentimentAverage(), arr_of_sentiments: sentiments_arr, number_of_tweets: sentiments_arr.length})
+	res.render("index", {value: requestSentimentAverage(), number_of_tweets: sentiments_arr.length})
 })
 
 // catch 404 and forward to error handler
