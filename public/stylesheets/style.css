@@ -33,3 +33,7 @@ div#info button {
 div#info button:focus {
 	outline:0;
 }
+
+div#info a button:hover {
+	cursor: pointer;
+}

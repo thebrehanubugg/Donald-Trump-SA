@@ -1,0 +1,8 @@
+extends layout
+
+block content
+	div#info
+		script(src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js")
+		p(id="data_paragraph")= data
+		canvas#graph
+		script(src="javascripts/graph.js")

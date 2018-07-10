@@ -25,6 +25,10 @@ client.stream("statuses/filter", {track: "donald trump"}, function(stream) {
 		var tweet_data = tweet.text
 		var tweet_sentiment = sentiment.analyze(tweet_data).score
 
+		if(sentiments_arr.length >= 50) {
+			sentiments_arr.pop()
+		}
+
 		sentiments_arr.push(tweet_sentiment)
 
 		total_sentiments += 1
@@ -49,7 +53,15 @@ app.use(express.urlencoded({ extended: false }))
 app.use(express.static(path.join(__dirname, "public")))
 
 app.get("/", function(req, res) {
-	res.render("index", {value: requestSentimentAverage(), number_of_tweets: sentiments_arr.length})
+	res.render("index", {value: requestSentimentAverage(), number_of_tweets: total_sentiments})
+})
+
+app.get("/graph", function(req, res) {
+	res.render("graph", {data: sentiments_arr})
+})
+
+app.get("/data", function(req, res) {
+	return "#YOLO"
 })
 
 // catch 404 and forward to error handler

@@ -2,10 +2,12 @@ extends layout
 
 block content
 	div#info
-		img(src="#")
+		img(id="emotion" src="#")
 		p#sentiment_score= value
 		br
 		button #{number_of_tweets} Tweets Recorded
-		// br
-		// br
-		// button Ayo! Generate Graph
+		br
+		br
+		a(href="/graph")
+			button Ayo! Generate Graph
+	script(src="javascripts/script.js")
