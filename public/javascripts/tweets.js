@@ -7,14 +7,16 @@ socket.on("data", function(data) {
 		tweet = data[i][0];
 		sentiment = data[i][1];
 		var div = document.createElement("div");
+		var innerDiv = document.createElement("div");
 
 		var h1 = document.createElement("h1");
 		var ht = document.createTextNode(sentiment);
 		var para = document.createElement("p");
-		var t = document.createTextNode(tweet)
+		var t = document.createTextNode(tweet);
 
 		h1.appendChild(ht);
 		para.appendChild(t);
+		innerDiv.className = "wrapper";
 
 		if(sentiment > 0) {
 			div.style.background = "#2BC016";
@@ -22,8 +24,10 @@ socket.on("data", function(data) {
 			div.style.background = "#F93943";
 		}
 
-		div.appendChild(h1);
-		div.appendChild(para);
+		innerDiv.appendChild(h1);
+		innerDiv.appendChild(para);
+
+		div.appendChild(innerDiv);
 
 		document.getElementById("info").appendChild(div);
 	}

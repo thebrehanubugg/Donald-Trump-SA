@@ -8,6 +8,12 @@ body {
 	outline: none;
 }
 
+div.wrapper {
+	width: 100%;
+	max-width: 90%;
+	margin: 0 auto !important;
+}
+
 div#info {
 	width: 100vw;
 	height: 100vh;
@@ -16,8 +22,8 @@ div#info {
 }
 
 div#info img {
-	width: 200px;
-	height: 200px;
+	width: 250px;
+	height: 250px;
 	margin-top: calc((100vh / 2) - 200px);
 }
 
@@ -26,8 +32,9 @@ div#info p {
 }
 
 div#info button {
-	background-color: #FFFFFF;
+	background-color: rgba(255, 255, 255, 0.5);
 	border: none;
+	border-radius: 4px;
 	padding: 8px 20px;
 }
 
@@ -39,14 +46,18 @@ div#info a button:hover {
 	cursor: pointer;
 }
 
+div#info a button {
+	background-color: #FFFFFF;
+	width: 200px;
+}
+
 div#info.tweet div {
 	height: 250px;
 	padding: 0;
 	margin: 0;
-	line-height: 100px;
 }
 
 div#info.tweet div h1 {
-	padding: 0;
+	padding: 75px 0 0 0;
 	margin: 0;
 }
