@@ -3,6 +3,10 @@
 var express = require("express")
 var app = express()
 
+var http = require("http").Server(app)
+
+var io = require("socket.io")(http)
+
 var path = require("path")
 var Sentiment = require("sentiment")
 var sentiment = new Sentiment()
@@ -19,17 +23,23 @@ var total_sentiments = 0
 var sentiment_totals = 0
 
 var sentiments_arr = []
+var tweets_arr = []
 
 client.stream("statuses/filter", {track: "donald trump"}, function(stream) {
 	stream.on("data", function(tweet) {
 		var tweet_data = tweet.text
 		var tweet_sentiment = sentiment.analyze(tweet_data).score
 
-		if(sentiments_arr.length >= 50) {
+		if(sentiments_arr.length >= 150) {
 			sentiments_arr.pop()
 		}
 
+		if(tweets_arr.length >= 150) {
+			tweets_arr.pop()
+		}
+
 		sentiments_arr.push(tweet_sentiment)
+		tweets_arr.push([tweet_data, tweet_sentiment])
 
 		total_sentiments += 1
 		sentiment_totals += tweet_sentiment
@@ -52,6 +62,13 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(express.static(path.join(__dirname, "public")))
 
+io.on("connection", function(socket) {
+	io.emit("data", tweets_arr)
+
+	io.on("disconnect", function() {
+	})
+})
+
 app.get("/", function(req, res) {
 	res.render("index", {value: requestSentimentAverage(), number_of_tweets: total_sentiments})
 })
@@ -60,8 +77,8 @@ app.get("/graph", function(req, res) {
 	res.render("graph", {data: sentiments_arr})
 })
 
-app.get("/data", function(req, res) {
-	return "#YOLO"
+app.get("/tweets", function(req, res) {
+	res.render("tweets")
 })
 
 // catch 404 and forward to error handler
@@ -80,6 +97,8 @@ app.use(function(err, req, res, next) {
 	res.render("error")
 })
 
-app.listen(8080)
+http.listen(8080, function() {
+	console.log("Listening on *:8080")
+})
 
 module.exports = app

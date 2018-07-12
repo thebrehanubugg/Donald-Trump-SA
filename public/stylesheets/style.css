@@ -38,3 +38,15 @@ div#info button:focus {
 div#info a button:hover {
 	cursor: pointer;
 }
+
+div#info.tweet div {
+	height: 250px;
+	padding: 0;
+	margin: 0;
+	line-height: 100px;
+}
+
+div#info.tweet div h1 {
+	padding: 0;
+	margin: 0;
+}
