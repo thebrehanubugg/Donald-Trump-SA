@@ -29,6 +29,7 @@ socket.on("data", function(data) {
 
 		div.appendChild(innerDiv);
 
-		document.getElementById("info").appendChild(div);
+		info = document.getElementById("info")
+		info.insertBefore(div, info.firstChild);
 	}
 })

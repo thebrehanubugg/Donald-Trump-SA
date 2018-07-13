@@ -8,8 +8,7 @@ var http = require("http").Server(app)
 var io = require("socket.io")(http)
 
 var path = require("path")
-var Sentiment = require("sentiment")
-var sentiment = new Sentiment()
+var ml = require("ml-sentiment")()
 
 var Twitter = require("twitter")
 var client = new Twitter({
@@ -27,8 +26,16 @@ var tweets_arr = []
 
 client.stream("statuses/filter", {track: "donald trump"}, function(stream) {
 	stream.on("data", function(tweet) {
-		var tweet_data = tweet.text
-		var tweet_sentiment = sentiment.analyze(tweet_data).score
+		var tweet_data = ""
+		if(tweet.retweeted_status && tweet.retweeted_status.extended_tweet) {
+			tweet_data = tweet.retweeted_status.extended_tweet.full_text
+		} else if(tweet.extended_tweet) {
+			tweet_data = tweet.extended_tweet.full_text
+		} else {
+			tweet_data = tweet.text
+		}
+
+		var tweet_sentiment = ml.classify(tweet_data)
 
 		if(sentiments_arr.length >= 150) {
 			sentiments_arr.pop()
