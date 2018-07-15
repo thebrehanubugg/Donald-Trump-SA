@@ -67,7 +67,7 @@ app.set("view engine", "pug")
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
-app.use(express.static(path.join(__dirname, "public")))
+app.use("/dtsa", express.static(__dirname + "/public"))
 
 io.on("connection", function(socket) {
 	io.emit("data", tweets_arr)
@@ -77,14 +77,18 @@ io.on("connection", function(socket) {
 })
 
 app.get("/", function(req, res) {
+	res.redirect("/dtsa")	
+})
+
+app.get("/dtsa", function(req, res) {
 	res.render("index", {value: requestSentimentAverage(), number_of_tweets: total_sentiments})
 })
 
-app.get("/graph", function(req, res) {
+app.get("/dtsa/graph", function(req, res) {
 	res.render("graph", {data: sentiments_arr})
 })
 
-app.get("/tweets", function(req, res) {
+app.get("/dtsa/tweets", function(req, res) {
 	res.render("tweets")
 })
 
@@ -104,8 +108,8 @@ app.use(function(err, req, res, next) {
 	res.render("error")
 })
 
-http.listen(8080, function() {
-	console.log("Listening on *:8080")
+http.listen(1993, function() {
+	console.log("Listening on *:1993")
 })
 
 module.exports = app
